@@ -1,8 +1,8 @@
 import { Body, Controller, Get, HttpCode, HttpStatus, Param, Post, Put } from '@nestjs/common';
 import {ApiTags} from '@nestjs/swagger';
-import { CryptoService } from './blokchain.service';
+import { CryptoService } from './blockchain.service';
 
-@ApiTags('Blokchain')
+@ApiTags('Blockchain')
 @Controller('v1')
 export class CryptoController {
   constructor(private readonly cryptoService: CryptoService) {}

@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
-import { CryptoController } from './blokchain.controller';
+import { CryptoController } from './blockchain.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { CryptoService } from './blokchain.service';
+import { CryptoService } from './blockchain.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([])],

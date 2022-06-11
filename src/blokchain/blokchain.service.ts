@@ -4,7 +4,7 @@ const csv = require('csv-parser');
 import path = require('path');
 const fs = require('fs');
 import axios from 'axios';
-import { jsonFromLineDto } from './dto/crypto';
+import { jsonFromLineDto } from './dto/blokchain';
 const { parse } = require('csv-parse');
 
 @Injectable()
@@ -33,7 +33,7 @@ export class CryptoService {
 
       const lineReader = fs
         .createReadStream(
-          '/Users/aditya/test/birthday-reminder/server/src/user/transactions.csv',
+          '/transactions.csv',
         )
         .on('error', () => {
           // handle error

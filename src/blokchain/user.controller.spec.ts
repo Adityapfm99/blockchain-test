@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { CryptoController } from './crypto.controller';
-import { CryptoService } from './crypto.service';
+import { CryptoController } from './blokchain.controller';
+import { CryptoService } from './blokchain.service';
 
 describe('UserController', () => {
   let controller: CryptoController;

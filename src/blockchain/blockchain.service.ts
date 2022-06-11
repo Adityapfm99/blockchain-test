@@ -8,7 +8,7 @@ import { jsonFromLineDto } from './dto/blokchain';
 const { parse } = require('csv-parse');
 
 @Injectable()
-export class CryptoService {
+export class BlockchainService {
   constructor() {}
 
   static async getUSDValues() {
@@ -21,8 +21,28 @@ export class CryptoService {
     });
     return getUSD.data;
   }
+  static async filterByProperty(array, prop, value){
+    let filtered = [];
+    for(let i = 0; i < array.length; i++){
 
-  async getLatestValPerTokenInUSD() {
+        let obj = array[i];
+
+        for(var key in obj){
+            if(typeof(obj[key] == "object")){
+                var item = obj[key];
+                if(item[prop] == value){
+                    filtered.push(item);
+                }
+            }
+        }
+
+    }    
+
+    return filtered;
+
+}
+
+  static async getLatestValPerTokenInUSD() {
     return new Promise(function (resolve) {
       let output = [];
       let usdValues;
@@ -33,7 +53,7 @@ export class CryptoService {
 
       const lineReader = fs
         .createReadStream(
-          '/transactions.csv',
+          '/Users/aditya/crypto/blockchain/src/blockchain/transactions.csv',
         )
         .on('error', () => {
           // handle error
@@ -42,7 +62,7 @@ export class CryptoService {
         .on('data', (chunk) => {
           const jsonFromLine = new jsonFromLineDto();
           let lineSplit = chunk;
-   
+          console.log('nasuk---------------------------',chunk);
           jsonFromLine.timestamp = lineSplit.timestamp;
           jsonFromLine.transaction_type = lineSplit.transaction_type;
           jsonFromLine.token = lineSplit.token;
@@ -67,7 +87,7 @@ export class CryptoService {
 
         .on('end', () => {
           // handle end of CSV
-          let cryptoCompare = CryptoService.getUSDValues();
+          let cryptoCompare = BlockchainService.getUSDValues();
     
           cryptoCompare.then(
             function (result) {
@@ -92,7 +112,7 @@ export class CryptoService {
         });
 
       lineReader.on('close', function (chunk) {
-        let cryptoCompare = CryptoService.getUSDValues();
+        let cryptoCompare = BlockchainService.getUSDValues();
 
         cryptoCompare.then(
           function (result) {
@@ -116,4 +136,66 @@ export class CryptoService {
       });
     });
   }
+  
+  static async getPortfolioValPerToken(date: Date) {
+    return new Promise(function (resolve) {
+      console.log('masuk date')
+      let output = [];
+      let usdValues;
+      let btcOutputArr = [];
+      let ethOutputArr = [];
+      let xrpOutputArr = [];
+
+      const lineReader = fs
+      .createReadStream(
+        '/Users/aditya/crypto/blockchain/src/blockchain/transactions.csv',
+      )
+      .on('error', () => {
+        // handle error
+      })
+      .pipe(csv())
+      .on('data', (chunk) => {
+
+          const jsonFromLine = new jsonFromLineDto();
+          let lineSplit = chunk;
+          jsonFromLine.timestamp = lineSplit.timestamp;
+          jsonFromLine.transaction_type = lineSplit.transaction_type;
+          jsonFromLine.token = lineSplit.token;
+          jsonFromLine.amount = lineSplit.amount;
+
+          //converting date from timestamp
+          let d = new Date(lineSplit.timestamp * 1000);
+          let dateFromCSV = d.getFullYear() + '/' + (d.getMonth()+1) + '/' + d.getDate();
+          console.log('dateFromCSV',dateFromCSV, date.toString())
+              if(jsonFromLine.token === 'ETH'){
+                  if(date.toString() === dateFromCSV){
+                      ethOutputArr.push({"token":jsonFromLine.token,"amount":jsonFromLine.amount * usdValues.ETH.USD})
+                  }
+              } else if (jsonFromLine.token === 'BTC'){
+  
+                  if(date.toString() === dateFromCSV){
+                      btcOutputArr.push({"token":jsonFromLine.token,"amount":jsonFromLine.amount * usdValues.ETH.USD})
+                  }
+              }
+              else if (jsonFromLine.token === 'XRP'){
+  
+                  if(date.toString() === dateFromCSV){
+                      xrpOutputArr.push({"token":jsonFromLine.token,"amount":jsonFromLine.amount * usdValues.ETH.USD})
+                  }
+              }
+      }
+
+      )
+  ;
+      lineReader.on('close', function (line) {
+              output.push(ethOutputArr);
+              output.push(btcOutputArr);
+              output.push(xrpOutputArr);
+              resolve(output);
+
+      });
+      
+  });
+  }
+
 }

@@ -3,10 +3,10 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { CryptoModule } from './blockchain/blockchain.module';
+import { BlockchainoModule } from './blockchain/blockchain.module';
 
 @Module({
-  imports: [ CryptoModule],
+  imports: [ BlockchainoModule],
   controllers: [AppController],
   providers: [AppService],
 })

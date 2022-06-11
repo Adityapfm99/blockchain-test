@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
-import { CryptoController } from './blockchain.controller';
+import { BlockChainController } from './blockchain.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { CryptoService } from './blockchain.service';
+import { BlockchainService } from './blockchain.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([])],
-  controllers: [CryptoController],
-  providers: [CryptoService],
+  controllers: [BlockChainController],
+  providers: [BlockchainService],
 })
-export class CryptoModule {}
+export class BlockchainoModule {}

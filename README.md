@@ -40,7 +40,7 @@ $ yarn start
 ## Documentation Swagger
 
 ```bash
-$ http://localhost:3000/docs/
+$ http://localhost:3000/docs
 ```
 
 ## Health Check Endpoint
@@ -48,12 +48,12 @@ $ http://localhost:3000/docs/
 ```bash
 $ http://localhost:3000/check
 ```
-## propine
+## Propine exam
 
-Given no parameters, return the latest portfolio value per token in USD --> v1/latest-portfolio
+Given no parameters, return the latest portfolio value per token in USD --> [http://localhost:3000/v1/latest-portfolio]
 
-Given a token, return the latest portfolio value for that token in USD --> v1/latest-portfolio-date:/date
+Given a token, return the latest portfolio value for that token in USD --> [http://localhost:3000/v1/latest-portfolio-date:/date]
 
-Given a date, return the portfolio value per token in USD on that date --> v1/latest-portfolio-token:/token
+Given a date, return the portfolio value per token in USD on that date --> [http://localhost:3000/v1/latest-portfolio-token:/token]
 
-Given a date and a token, return the portfolio value of that token in USD on that date --> v1/latest-portfolio-date:/date/:token
+Given a date and a token, return the portfolio value of that token in USD on that date --> [http://localhost:3000/v1/latest-portfolio-date:/date/:token]

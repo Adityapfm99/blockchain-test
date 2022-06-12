@@ -51,13 +51,21 @@ $ http://localhost:3000/check
 ## Propine exam
 
 Given no parameters, return the latest portfolio value per token in USD --> [http://localhost:3000/v1/latest-portfolio]
+```bash
 ex: [GET] http://localhost:3000/v1/latest-portfolio
+```
 
 Given a token, return the latest portfolio value for that token in USD --> [http://localhost:3000/v1/latest-portfolio-token:/token]
+```bash
 ex: [GET] http://localhost:3000/v1/latest-portfolio-token/BTC
+```
 
 Given a date, return the portfolio value per token in USD on that date --> http://localhost:3000/v1/latest-portfolio-date:/date
+```bash
 ex: [GET] http://localhost:3000/v1/latest-portfolio-date/2018-03-05
+```
 
 Given a date and a token, return the portfolio value of that token in USD on that date --> [http://localhost:3000/v1/latest-portfolio-date-token:/date/:token]
+```bash
 ex: [GET] http://localhost:3000/v1/latest-portfolio-token/2018-03-05/BTC
+```

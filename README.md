@@ -30,11 +30,21 @@
 ```bash
 $ yarn install
 ```
+or
+
+```bash
+npm install
+```
 
 ## Running the app
 
 ```bash
 $ yarn start
+```
+or
+
+```bash
+npm start
 ```
 
 ## Documentation Swagger

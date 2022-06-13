@@ -49,20 +49,19 @@ export class BlockchainService {
       let btcOutputArr = { token: 'BTC', amount: 0, timestamp: 0 };
       let ethOutputArr = { token: 'ETH', amount: 0, timestamp: 0 };
       let xrpOutputArr = { token: 'XRP', amount: 0, timestamp: 0 };
-      console.log('nasuk---------------------------');
-
       const lineReader = fs
         .createReadStream(
-          '/Users/aditya/crypto/blockchain/src/blockchain/transactions.csv',
+          '/Users/aditya/crypto/blockchain/src/blockchain/test.csv',
         )
         .on('error', () => {
           // handle error
+          console.log('FILE NOT FOUND')
         })
         .pipe(csv())
         .on('data', (chunk) => {
           const jsonFromLine = new jsonFromLineDto();
           let lineSplit = chunk;
-          console.log('nasuk---------------------------',chunk);
+          // console.log('masuk---------------------------',chunk);
           jsonFromLine.timestamp = lineSplit.timestamp;
           jsonFromLine.transaction_type = lineSplit.transaction_type;
           jsonFromLine.token = lineSplit.token;
@@ -100,7 +99,7 @@ export class BlockchainService {
               output.push(btcOutputArr);
               output.push(xrpOutputArr);
 
-              console.log('aaaaaaa', output);
+              console.log('test', output);
               resolve(output);
               return output;
             },
@@ -136,22 +135,286 @@ export class BlockchainService {
       });
     });
   }
+
+  static async valuePerTokenUsd(date: Date) {
+    return new Promise(function (resolve) {
+      let output = [];
+      let valueBtc = [];
+      let valueEth = [];
+      let valueXrp = [];
+      let usdValues;
+      let btcOutputArr = { token: 'BTC', amount: 0, timestamp: 0 , date: date};
+      let ethOutputArr = { token: 'ETH', amount: 0, timestamp: 0 , date: date};
+      let xrpOutputArr = { token: 'XRP', amount: 0, timestamp: 0 , date: date};
+      
+      const lineReader = fs
+        .createReadStream(
+          '/Users/aditya/crypto/blockchain/src/blockchain/test.csv',
+        )
+        .on('error', () => {
+          // handle error
+          console.log('FILE NOT FOUND')
+        })
+        .pipe(csv())
+        .on('data', (chunk) => {
+ 
+          const jsonFromLine = new jsonFromLineDto();
+          let lineSplit = chunk;
+          jsonFromLine.timestamp = lineSplit.timestamp;
+          jsonFromLine.transaction_type = lineSplit.transaction_type;
+          jsonFromLine.token = lineSplit.token;
+          jsonFromLine.amount = lineSplit.amount;
+          let d = new Date(lineSplit.timestamp * 1000);
+          let dateFromCSV = d.getFullYear() + '-' + (d.getMonth()+1) + '-' + d.getDate();
+
+          if (jsonFromLine.token === 'ETH') {
+            if (date.toString() === dateFromCSV) {
+              ethOutputArr.amount = jsonFromLine.amount;
+              ethOutputArr.timestamp = jsonFromLine.timestamp;
+              valueEth.push(Number(jsonFromLine.amount));
+              
+            }
+          } else if (jsonFromLine.token === 'BTC') {
+            if (date.toString() === dateFromCSV) {
+              btcOutputArr.amount = jsonFromLine.amount;
+              btcOutputArr.timestamp = jsonFromLine.timestamp;
+              valueBtc.push(Number(jsonFromLine.amount));
+            }
+          } else if (jsonFromLine.token === 'XRP') {
+            if (date.toString() === dateFromCSV ) {
+              xrpOutputArr.amount = jsonFromLine.amount;
+              xrpOutputArr.timestamp = jsonFromLine.timestamp;
+              valueXrp.push(Number(jsonFromLine.amount));
+            }
+            
+          }
+        })
+
+        .on('end', () => {
+          // handle end of CSV
+          let cryptoCompare = BlockchainService.getUSDValues();
+          
+          cryptoCompare.then(
+            function (result) {
+              let usdValues = result;
+              let amtBtc = 0;
+              let amtXrp = 0;
+              let amtEth = 0;
+           
+              valueBtc.forEach(line => {
+                amtBtc += line;
+              });
+              valueEth.forEach(line => {
+                amtEth += line;
+              });
+              valueXrp.forEach(line => {
+                amtXrp += line;
+              });
+              ethOutputArr.amount = amtEth * usdValues.ETH.USD;
+              btcOutputArr.amount = amtBtc * usdValues.ETH.USD;
+              xrpOutputArr.amount = amtXrp * usdValues.ETH.USD;
+
+              output.push(ethOutputArr);
+              output.push(btcOutputArr);
+              output.push(xrpOutputArr);
+
+              resolve(output);
+              return output;
+            },
+            function (err) {
+              console.log(err);
+            },
+          );
+          return output;
+        });
+
+
+    });
+  }
+
   
-  static async getPortfolioValPerToken(date: Date) {
+  static async getPortfolioValPerDate(date: Date) {
     return new Promise(function (resolve) {
       console.log('masuk date')
       let output = [];
       let usdValues;
       let btcOutputArr = [];
-      let ethOutputArr = [];
+      let ethOutputArr= [];
       let xrpOutputArr = [];
+      let cryptoCompare = BlockchainService.getUSDValues();
+
+      const lineReader = fs
+      .createReadStream(
+        '/Users/aditya/crypto/blockchain/src/blockchain/test.csv',
+      )
+      .on('error', (err) => {
+        // handle error
+        console.log('FILE NOT FOUND')
+      })
+      .pipe(csv())
+      .on('data', (chunk) => {
+
+          const jsonFromLine = new jsonFromLineDto();
+          let lineSplit = chunk;
+          jsonFromLine.timestamp = lineSplit.timestamp;
+          jsonFromLine.transaction_type = lineSplit.transaction_type;
+          jsonFromLine.token = lineSplit.token;
+          jsonFromLine.amount = lineSplit.amount;
+
+          //converting date from timestamp
+          let d = new Date(lineSplit.timestamp * 1000);
+          let dateFromCSV = d.getFullYear() + '-' + (d.getMonth()+1) + '-' + d.getDate();
+          cryptoCompare.then(
+            function (result) {
+              let usdValues = result;
+              let amt = jsonFromLine.amount;
+              
+              if (jsonFromLine.token === 'ETH'){
+                if (date.toString() === dateFromCSV){
+                  
+                    ethOutputArr.push({"token":jsonFromLine.token,"amount":jsonFromLine.amount * usdValues.ETH.USD})
+                }
+              } else if (jsonFromLine.token === 'BTC'){
+                
+                  if (date.toString() === dateFromCSV){
+                      btcOutputArr.push({"token":jsonFromLine.token,"amount":jsonFromLine.amount * usdValues.ETH.USD})
+                  }
+              }
+              else if (jsonFromLine.token === 'XRP'){
+               
+                  if (date.toString() === dateFromCSV){
+                      xrpOutputArr.push({"token":jsonFromLine.token,"amount":jsonFromLine.amount * usdValues.ETH.USD})
+                  }
+              }
+
+              output.push(ethOutputArr);
+              output.push(btcOutputArr);
+              output.push(xrpOutputArr);
+              resolve(output);
+              return output;
+            },
+            function (err) {
+              console.log(err);
+            },
+          );
+      } //
+
+      );
+      lineReader.on('close', function (line) {
+              output.push(ethOutputArr);
+              output.push(btcOutputArr);
+              output.push(xrpOutputArr);
+              resolve(output);
+              return output;
+
+      });
+      
+  });
+  }
+
+  static async getPortfolioToken(token: string) {
+    return new Promise(function (resolve, reject) {
+      let output = [];
+      let sum = 0;
+      let usdValues;
+      let btcOutputArr = [];
+      let resOutputArr = [];
+      let xrpOutputArr = [];
+      let cryptoCompare = BlockchainService.getUSDValues();
+
+      const lineReader = fs
+      .createReadStream(
+        '/Users/aditya/crypto/blockchain/src/blockchain/test.csv',
+      )
+      .on('error', (err) => {
+        // handle error
+        reject({message: err.message});
+      })
+      .pipe(csv())
+      .on('data', (chunk) => {
+
+          const jsonFromLine = new jsonFromLineDto();
+          let lineSplit = chunk;
+          jsonFromLine.timestamp = lineSplit.timestamp;
+          jsonFromLine.transaction_type = lineSplit.transaction_type;
+          jsonFromLine.token = lineSplit.token;
+          jsonFromLine.amount = lineSplit.amount;
+          
+          cryptoCompare.then(
+            function (result) {
+              let usdValues = result;
+              let amt = jsonFromLine.amount;
+              
+              if(jsonFromLine.token === token){
+                resOutputArr.push({"amount": jsonFromLine.amount * usdValues.ETH.USD})
+                  
+              } 
+
+              output.push(resOutputArr);
+              resolve(output[0]);
+              return output[0];
+            },
+            function (err) {
+              console.log(err);
+            },
+          );
+      } // end loop
+      
+      )
+  
+      lineReader.on('close', function (line) {
+              output.push(resOutputArr);
+              resolve(output);
+              
+
+      });
+      
+  });
+  }
+
+  static async resToken(token:string) {
+    let a = [];
+    let sum = 0;
+    let result = {
+      token: token,
+      amountInUsd : 0
+    }
+    const res = await this.getPortfolioToken(token)
+    a.push(res);
+    for (const data of a[0]) {
+      sum += Number(data.amount);
+  }
+    result.amountInUsd = sum;
+
+    return result;
+  }
+
+  static async resDate(date: Date) {
+  
+    const res = await this.valuePerTokenUsd(date)
+    console.log('aaa res',res)
+ 
+    return res;
+
+  }
+
+  static async getPortfolioValPerDateToken(date: Date, token: string) {
+    return new Promise(function (resolve) {
+      console.log('masuk date')
+      let output = [];
+      let usdValues;
+      let btcOutputArr = [];
+      let resOutputArr = [];
+      let xrpOutputArr = [];
+      let cryptoCompare = BlockchainService.getUSDValues();
 
       const lineReader = fs
       .createReadStream(
         '/Users/aditya/crypto/blockchain/src/blockchain/transactions.csv',
       )
-      .on('error', () => {
+      .on('error', (err) => {
         // handle error
+        console.log('FILE NOT FOUND')
       })
       .pipe(csv())
       .on('data', (chunk) => {
@@ -166,21 +429,11 @@ export class BlockchainService {
           //converting date from timestamp
           let d = new Date(lineSplit.timestamp * 1000);
           let dateFromCSV = d.getFullYear() + '/' + (d.getMonth()+1) + '/' + d.getDate();
-          console.log('dateFromCSV',dateFromCSV, date.toString())
-              if(jsonFromLine.token === 'ETH'){
+          
+              if (jsonFromLine.token === token) {
                   if(date.toString() === dateFromCSV){
-                      ethOutputArr.push({"token":jsonFromLine.token,"amount":jsonFromLine.amount * usdValues.ETH.USD})
-                  }
-              } else if (jsonFromLine.token === 'BTC'){
-  
-                  if(date.toString() === dateFromCSV){
-                      btcOutputArr.push({"token":jsonFromLine.token,"amount":jsonFromLine.amount * usdValues.ETH.USD})
-                  }
-              }
-              else if (jsonFromLine.token === 'XRP'){
-  
-                  if(date.toString() === dateFromCSV){
-                      xrpOutputArr.push({"token":jsonFromLine.token,"amount":jsonFromLine.amount * usdValues.ETH.USD})
+                    console.log('dateFromCSVETH',dateFromCSV, date.toString())
+                    resOutputArr.push({"token":jsonFromLine.token,"amount":jsonFromLine.amount * usdValues.ETH.USD})
                   }
               }
       }
@@ -188,14 +441,13 @@ export class BlockchainService {
       )
   ;
       lineReader.on('close', function (line) {
-              output.push(ethOutputArr);
-              output.push(btcOutputArr);
-              output.push(xrpOutputArr);
+              output.push(resOutputArr);
               resolve(output);
 
       });
       
   });
   }
+
 
 }

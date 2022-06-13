@@ -64,6 +64,7 @@ Given no parameters, return the latest portfolio value per token in USD --> http
 ```bash
 ex: [GET] http://localhost:3000/v1/latest-portfolio
 ```
+![Alt text](/screenshoot/latest-portfolio.png?raw=true "return the latest portfolio value per token in USD")
 
 Given a token, return the latest portfolio value for that token in USD --> http://localhost:3000/v1/latest-portfolio-token:/token
 ```bash

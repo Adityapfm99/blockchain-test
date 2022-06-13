@@ -59,6 +59,7 @@ $ http://localhost:3000/docs
 ```bash
 $ http://localhost:3000/check
 ```
+![Alt text](/screenshoot/health.png?raw=true "For health chek API")
 ## Propine exam
 
 Given no parameters, return the latest portfolio value per token in USD --> http://localhost:3000/v1/latest-portfolio

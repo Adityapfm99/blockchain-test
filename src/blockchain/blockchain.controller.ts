@@ -34,12 +34,12 @@ export class BlockChainController {
     return BlockchainService.resDate(date);
   }
 
-  @Get("latest-portfolio-date/:date/:token")
+  @Get("latest-portfolio-date-token/:date/:token")
   @HttpCode(HttpStatus.OK)
   public async getLatestPortofolioDateToken(
     @Param("date") date: Date,
     @Param("token") token: string
   ) {
-    return BlockchainService.getPortfolioValPerDateToken(date, token);
+    return BlockchainService.resDateToken(date, token);
   }
 }

@@ -52,6 +52,7 @@ npm start
 ```bash
 $ http://localhost:3000/docs
 ```
+![Alt text](/screenshoot/swagger.png?raw=true "Swagger API Contract")
 
 ## Health Check Endpoint
 

@@ -64,19 +64,22 @@ Given no parameters, return the latest portfolio value per token in USD --> http
 ```bash
 ex: [GET] http://localhost:3000/v1/latest-portfolio
 ```
-![Alt text](/screenshoot/latest-portfolio.png?raw=true "return the latest portfolio value per token in USD")
+![Alt text](/screenshoot/latest-portfolio.png?raw=true "Given no parameters, return the latest portfolio value per token in USD")
 
 Given a token, return the latest portfolio value for that token in USD --> http://localhost:3000/v1/latest-portfolio-token:/token
 ```bash
-ex: [GET] http://localhost:3000/v1/latest-portfolio-token/BTC
+ex: [GET] http://localhost:3000/v1/latest-portfolio-token/ETH
 ```
-
+![Alt text](/screenshoot/latest-portfolio-token.png?raw=true "Given a token, return the latest portfolio value for that token in USD ")
 Given a date, return the portfolio value per token in USD on that date --> http://localhost:3000/v1/latest-portfolio-date:/date
+
 ```bash
 ex: [GET] http://localhost:3000/v1/latest-portfolio-date/2018-03-05
 ```
+![Alt text](/screenshoot/latest-portfolio-date.png?raw=true "Given a date, return the portfolio value per token in USD on that date ")
 
 Given a date and a token, return the portfolio value of that token in USD on that date --> http://localhost:3000/v1/latest-portfolio-date-token:/date/:token
 ```bash
 ex: [GET] http://localhost:3000/v1/latest-portfolio-token/2018-03-05/BTC
 ```
+![Alt text](/screenshoot/latest-portfolio-date-token.png?raw=true "Given a date and a token, return the portfolio value of that token in USD on that date")

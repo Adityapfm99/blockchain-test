@@ -74,12 +74,12 @@ ex: [GET] http://localhost:3000/v1/latest-portfolio-token/ETH
 Given a date, return the portfolio value per token in USD on that date --> http://localhost:3000/v1/latest-portfolio-date:/date
 
 ```bash
-ex: [GET] http://localhost:3000/v1/latest-portfolio-date/2018-03-05
+ex: [GET] http://localhost:3000/v1/latest-portfolio-date/2019-10-25
 ```
 ![Alt text](/screenshoot/latest-portfolio-date.png?raw=true "Given a date, return the portfolio value per token in USD on that date ")
 
 Given a date and a token, return the portfolio value of that token in USD on that date --> http://localhost:3000/v1/latest-portfolio-date-token:/date/:token
 ```bash
-ex: [GET] http://localhost:3000/v1/latest-portfolio-token/2018-03-05/BTC
+ex: [GET] http://localhost:3000/v1/latest-portfolio-token/2019-10-25/BTC
 ```
 ![Alt text](/screenshoot/latest-portfolio-date-token.png?raw=true "Given a date and a token, return the portfolio value of that token in USD on that date")
